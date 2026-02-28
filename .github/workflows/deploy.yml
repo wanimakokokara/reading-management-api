@@ -3,9 +3,8 @@ name: Deploy CDK Portfolio
 on:
   push:
     branches:
-      - main # mainブランチに変更がPushされたら発火
+      - main
 
-# OIDC認証に必要な権限設定
 permissions:
   id-token: write
   contents: read
@@ -32,5 +31,4 @@ jobs:
           aws-region: ap-northeast-1
 
       - name: CDK Deploy
-        # 確認プロンプトをスキップして自動デプロイ
         run: npx cdk deploy --require-approval never

@@ -28,7 +28,7 @@ jobs:
       - name: Configure AWS Credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::<AWSアカウントID>:role/<ロール名>
+          role-to-assume: arn:aws:iam::671002574911:role/AWSServiceRoleForRDS
           aws-region: ap-northeast-1
 
       - name: CDK Deploy

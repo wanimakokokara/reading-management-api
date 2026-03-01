@@ -12,7 +12,6 @@ class DecimalEncoder(json.JSONEncoder):
             return float(obj)
         return super(DecimalEncoder, self).default(obj)
 
-# Lambda標準搭載のboto3を利用
 dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table(os.environ['TABLE_NAME'])
 
@@ -43,6 +42,17 @@ def handler(event, context):
                 'statusCode': 200,
                 'headers': {'Access-Control-Allow-Origin': '*'},
                 'body': json.dumps({'books': response.get('Items', [])}, cls=DecimalEncoder, ensure_ascii=False)
+            }
+
+        # 🌟 本の削除 (DELETEリクエスト) を追加！
+        elif method == 'DELETE':
+            body = json.loads(event['body'])
+            book_id = body.get('id')
+            table.delete_item(Key={'id': book_id})
+            return {
+                'statusCode': 200,
+                'headers': {'Access-Control-Allow-Origin': '*'},
+                'body': json.dumps({'message': 'Book deleted!'})
             }
 
         return {'statusCode': 400, 'body': 'Unsupported method'}

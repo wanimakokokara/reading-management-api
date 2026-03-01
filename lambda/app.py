@@ -2,6 +2,15 @@ import json
 import os
 import boto3
 import uuid
+from decimal import Decimal
+
+class DecimalEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Decimal):
+            if obj % 1 == 0:
+                return int(obj)
+            return float(obj)
+        return super(DecimalEncoder, self).default(obj)
 
 # Lambda標準搭載のboto3を利用
 dynamodb = boto3.resource('dynamodb')
@@ -33,7 +42,7 @@ def handler(event, context):
             return {
                 'statusCode': 200,
                 'headers': {'Access-Control-Allow-Origin': '*'},
-                'body': json.dumps({'books': response.get('Items', [])})
+                'body': json.dumps({'books': response.get('Items', [])}, cls=DecimalEncoder, ensure_ascii=False)
             }
 
         return {'statusCode': 400, 'body': 'Unsupported method'}

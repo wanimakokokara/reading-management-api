@@ -1,19 +1,18 @@
-name: Deploy CDK Portfolio
+name: AWS CDK Deploy
 
 on:
   push:
-    branches:
-      - main
-
-permissions:
-  id-token: write
-  contents: read
+    branches: [ main ]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Setup Node.js
@@ -21,14 +20,23 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install Dependencies
-        run: npm ci
+      # 🌟 ステップ 1: CDK の依存関係をインストール
+      - name: Install CDK dependencies
+        run: npm install
+
+      # 🌟 ステップ 2: フロントエンドのビルド
+      - name: Build Frontend
+        run: |
+          cd frontend
+          npm install
+          npm run build
 
       - name: Configure AWS Credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::671002574911:role/GitHubActionsDeployRole
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ap-northeast-1
 
+      # 🌟 ステップ 3: デプロイ実行
       - name: CDK Deploy
         run: npx cdk deploy --require-approval never

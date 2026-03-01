@@ -15,6 +15,7 @@
 * **CI/CD**: GitHub Actions
 
 ## 3. ディレクトリ構成
+```text
 .
 ├── .github/workflows/ : CI/CD (GitHub Actions) のデプロイ定義
 ├── bin/ : CDKアプリのエントリポイント

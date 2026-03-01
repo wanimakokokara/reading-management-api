@@ -23,6 +23,7 @@
 ├── lambda/ : バックエンドAPIロジック (Python)
 ├── cdk.json : CDK設定ファイル
 └── package.json : Node.js パッケージおよび依存関係
+```
 
 ## 4. セットアップ (Getting Started)
 開発者が最初にすべき手順です（※本番デプロイはCI/CDにて自動化されています）。

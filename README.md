@@ -1,50 +1,35 @@
-# 読書管理アプリ インフラストラクチャ
+# 📚 読書管理アプリ (Full-stack Serverless App)
 
-## 1. プロジェクト概要
-読書記録（タイトル、レビュー、評価等）を管理するためのシンプルなREST APIバックエンド、およびそのインフラストラクチャ定義です。
-サーバーレスアーキテクチャによるスケーラブルな基盤と、OIDC連携を用いたセキュアなCI/CDの実践を目的に構築しています。
+React + TypeScript で構築された、サーバーレスアーキテクチャの読書管理アプリケーションです。
+フロントエンドは AWS S3 + CloudFront、バックエンドは API Gateway + Lambda + DynamoDB を採用し、完全な IaC (AWS CDK) と CI/CD パイプラインを構築しています。
+<br><br>
 
-* **環境**: prod (ポートフォリオ用本番環境)
-* **アーキテクチャ**: 完全サーバーレス構成 (Client -> API Gateway -> Lambda -> DynamoDB)
-* **主要リソース**: Amazon API Gateway, AWS Lambda, Amazon DynamoDB
+## 🌐 本番URL
+https://d22cu18dyopixt.cloudfront.net/  
+<br><br>
 
-## 2. 技術スタック (Tech Stack)
-* **Cloud**: AWS
-* **IaC**: AWS CDK v2 (TypeScript)
-* **Backend Logic**: Python 3.12 (Lambda Runtime)
-* **CI/CD**: GitHub Actions
+## 🏗 アーキテクチャ構成
+- **Frontend**: React (Vite) / TypeScript
+- **Infrastructure**: AWS CDK (TypeScript)
+- **Storage**: Amazon S3 (Static Website Hosting)
+- **CDN**: Amazon CloudFront (with Origin Access Control)
+- **API**: Amazon API Gateway / AWS Lambda (Python)
+- **Database**: Amazon DynamoDB
+- **CI/CD**: GitHub Actions (OIDC Auth)  
+<br><br>
 
-## 3. ディレクトリ構成
-```text
-.
-├── .github/workflows/ : CI/CD (GitHub Actions) のデプロイ定義
-├── bin/ : CDKアプリのエントリポイント
-├── lib/ : インフラストラクチャ定義 (TypeScript)
-├── lambda/ : バックエンドAPIロジック (Python)
-├── cdk.json : CDK設定ファイル
-└── package.json : Node.js パッケージおよび依存関係
-```
+## ✨ 技術的なこだわり
 
-## 4. セットアップ (Getting Started)
-開発者が最初にすべき手順です（※本番デプロイはCI/CDにて自動化されています）。
+### 1. セキュアな静的コンテンツ配信 (OAC)
+CloudFront の **Origin Access Control (OAC)** を導入し、S3 バケットへの直接アクセスを遮断。CloudFront 経由のアクセスのみを許可する AWS のベストプラクティスに基づいたセキュアな配信環境を構築しました。 
 
-1. **ツールのインストール**: 
-   - Node.js (v20推奨), AWS CLI, AWS CDK CLI
-2. **依存パッケージのインストール**: 
-   `npm ci` を実行します。
-3. **認証設定**: 
-   ローカルのAWS CLIにAdministrator権限を持つプロファイルを設定します（または `aws sso login` を実行）。
-4. **初期化 (初回のみ)**: 
-   `npx cdk bootstrap` を実行します。
+### 2. GitHub Actions によるシークレットレスな CI/CD
+**OIDC (OpenID Connect)** を用いた認証を実装。IAM ユーザーのアクセスキーを GitHub に保存せず、一時的な認証情報を使用することで、セキュリティリスクを最小限に抑えた自動デプロイを実現しました。 
 
-## 5. 操作ガイド (Usage)
-ローカル開発時によく使うコマンドです。
+### 3. モダンなUI/UXとレスポンシブ対応
+CSS モジュールによるカード型レイアウトを採用し、直感的なユーザー体験を意識したインターフェースを実装しています。 
+<br><br>
 
-* `npx cdk diff` : インフラ定義の差分確認
-* `npx cdk synth` : CloudFormationテンプレートの生成確認
-* `npx cdk deploy` : ローカルからの手動デプロイ（※検証用）
-
-## 6. 運用上の注意 (Important Notes)
-* **手動変更の禁止**: AWSマネジメントコンソールからのリソース変更は原則禁止です。すべての変更は IaC (CDK) のコードを修正して反映させてください。
-* **デプロイフロー**: `main` ブランチへのコード Push をトリガーとして、GitHub Actions が自動で `cdk deploy` を実行します。
-* **秘匿情報の扱い**: AWSの永続的なアクセスキー（IAMユーザー）は発行・使用していません。GitHub Actionsからのデプロイは、**OIDC (OpenID Connect)** を利用した一時クレデンシャルによってセキュアに行われます。
+## 🛠 解決した主な課題
+- **CI/CD 内でのビルドフロー構築**: GitHub Actions 上でフロントエンドのビルドステップを定義し、環境に依存しない堅牢なデプロイフローを確立。
+- **インフラ構成のリファクタリング**: `S3Origin` から最新の `S3BucketOrigin` への移行を行い、非推奨警告を解消しつつ最新のセキュリティ構成（OAC）を適用。 

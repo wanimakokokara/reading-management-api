@@ -1,14 +1,26 @@
-# Welcome to your CDK TypeScript project
+# 読書管理アプリ インフラストラクチャ
 
-This is a blank project for CDK development with TypeScript.
+## 1. プロジェクト概要
+読書記録（タイトル、レビュー、評価等）を管理するためのシンプルなREST APIバックエンド、およびそのインフラストラクチャ定義です。
+サーバーレスアーキテクチャによるスケーラブルな基盤と、OIDC連携を用いたセキュアなCI/CDの実践を目的に構築しています。
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+* **環境**: prod (ポートフォリオ用本番環境)
+* **アーキテクチャ**: 完全サーバーレス構成 (Client -> API Gateway -> Lambda -> DynamoDB)
+* **主要リソース**: Amazon API Gateway, AWS Lambda, Amazon DynamoDB
 
-## Useful commands
+## 2. 技術スタック (Tech Stack)
+* **Cloud**: AWS
+* **IaC**: AWS CDK v2 (TypeScript)
+* **Backend Logic**: Python 3.12 (Lambda Runtime)
+* **CI/CD**: GitHub Actions
 
-* `npm run build`   compile typescript to js
-* `npm run watch`   watch for changes and compile
-* `npm run test`    perform the jest unit tests
-* `npx cdk deploy`  deploy this stack to your default AWS account/region
-* `npx cdk diff`    compare deployed stack with current state
-* `npx cdk synth`   emits the synthesized CloudFormation template
+## 3. ディレクトリ構成
+```text
+.
+├── .github/
+│   └── workflows/   # CI/CD (GitHub Actions) のデプロイ定義
+├── bin/             # CDKアプリのエントリポイント
+├── lib/             # インフラストラクチャ定義 (TypeScript)
+├── lambda/          # バックエンドAPIロジック (Python)
+├── cdk.json         # CDK設定ファイル
+└── package.json     # Node.js パッケージおよび依存関係

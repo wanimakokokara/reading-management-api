@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 
-const API_URL = 'https://e5s41jlkx2.execute-api.ap-northeast-1.amazonaws.com/prod/'
+const API_URL = ' https://gayry7fyd6.execute-api.ap-northeast-1.amazonaws.com/prod/'
 
 function App() {
   const [books, setBooks] = useState<any[]>([])
